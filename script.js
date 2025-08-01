@@ -57,4 +57,25 @@ nextBtn.addEventListener('click', () => {
   offset = Math.max(offset - cardWidth, maxOffset);
   slider.style.transform = `translateX(${offset}px)`;
 });
+document.querySelectorAll('.accordion .question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    item.classList.toggle('open');
+  });
+});
+const counters = document.querySelectorAll('.count');
+counters.forEach(counter => {
+  const update = () => {
+    const target = +counter.dataset.target;
+    const current = +counter.innerText;
+    const speed = target / 200;
+    if (current < target) {
+      counter.innerText = Math.ceil(current + speed);
+      requestAnimationFrame(update);
+    } else {
+      counter.innerText = target;
+    }
+  };
+  update();
+});
 
