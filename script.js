@@ -12,25 +12,39 @@ const io = new IntersectionObserver(
 
 revealEls.forEach((el) => io.observe(el));
 
-/* --- Contact Form (Basic Front-end Handler) --- */
 const form = document.getElementById("contact-form");
 const statusTxt = document.getElementById("form-status");
+const whatsappNumber = "919847614681"; // country code + number without leading zero
 
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", (e) => {
   e.preventDefault();
-  statusTxt.textContent = "Sending…";
 
-  // Replace the endpoint below with your form-processing service or back-end
-  try {
-    await fetch("https://example.com/form", {
-      method: "POST",
-      body: new FormData(form),
-    });
-    statusTxt.textContent = "Thank you! We’ll contact you soon.";
-    form.reset();
-  } catch (err) {
-    statusTxt.textContent = "Error. Please try WhatsApp instead.";
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const phone = form.phone.value.trim();
+  const message = form.message.value.trim();
+
+  if (!name || !email || !message) {
+    statusTxt.textContent = "Please fill in the required fields.";
+    return;
   }
+
+  // Construct the WhatsApp URL with a pre-filled message
+  const text = `Hello Emmanuel Builders,\n\n` +
+               `I am interested in your services. Here are my details:\n` +
+               `Name: ${name}\n` +
+               `Email: ${email}\n` +
+               (phone ? `Phone: ${phone}\n` : '') +
+               `Message: ${message}`;
+
+  const encodedText = encodeURIComponent(text);
+  const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
+
+  // Open WhatsApp Web or app in a new tab
+  window.open(whatsappURL, "_blank");
+
+  statusTxt.textContent = "Opening WhatsApp...";
+  form.reset();
 });
 
 const navToggle = document.getElementById('navToggle');
